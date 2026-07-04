@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "重逢 ReRead",
-  description: "每天三张卡片，与你在微信读书划过的句子重逢。",
+  description: "每天从你的微信读书划线里，随机挑三条给你看。",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

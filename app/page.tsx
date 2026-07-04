@@ -213,7 +213,7 @@ export default function Home() {
         className="fade-up mt-2 px-1 font-serif text-sm text-muted"
         style={{ animationDelay: "80ms" }}
       >
-        与你划过的句子，再见一面。
+        与你划线的句子再见一面。
       </p>
 
       {/* 卡片流 */}

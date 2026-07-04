@@ -69,7 +69,7 @@ export default function SettingsSheet({
         </div>
 
         <p className="mt-6 text-center text-xs leading-relaxed text-muted">
-          重逢 ReRead · 与你划过的句子再见一面
+          重逢 ReRead · 与你划线的句子再见一面
           <br />
           数据仅保存在本机浏览器
         </p>

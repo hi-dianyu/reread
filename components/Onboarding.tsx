@@ -32,11 +32,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
       <p className="text-[11px] tracking-[0.5em] text-muted">RE·READ</p>
       <h1 className="mt-3 font-serif text-5xl font-black tracking-wide">重逢</h1>
       <p className="mt-5 font-serif text-[1.05rem] leading-[1.9] text-muted">
-        那些你在微信读书里划下的句子，
-        <br />
-        值得再见一面。
-        <br />
-        每天，为你翻出三张旧时的书签。
+        每天从你的微信读书划线里，随机挑三条给你看。
       </p>
 
       <form

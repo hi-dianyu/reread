@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* paper & ink */
+  --background: #f6f1e7;
+  --foreground: #2b2620;
+  --muted: #8a8071;
+  --hairline: rgba(43, 38, 32, 0.12);
+  --accent: #a44a33;
+  --surface: #fdfaf3;
+
+  --font-serif-stack: "LXGW WenKai Screen", "Songti SC", "STSong", serif;
+  --font-sans-stack: system-ui, -apple-system, "PingFang SC",
+    "Microsoft YaHei", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --font-serif: var(--font-serif-stack);
+  --font-sans: var(--font-sans-stack);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1815;
+    --foreground: #e8e2d6;
+    --muted: #97907f;
+    --hairline: rgba(232, 226, 214, 0.14);
+    --accent: #c47257;
+    --surface: #23201c;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans-stack);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- card palettes: muted literary tints ---- */
+/* each sets --card-bg / --card-ink / --card-muted / --card-accent */
+
+.palette-0 { --card-bg: #e7edf0; --card-ink: #2f4550; --card-muted: #61798a; --card-accent: #3e6d8c; }
+.palette-1 { --card-bg: #e9ede2; --card-ink: #3b4a34; --card-muted: #6f7d63; --card-accent: #5c7350; }
+.palette-2 { --card-bg: #f0e7e6; --card-ink: #4e3b41; --card-muted: #8c7078; --card-accent: #9c6472; }
+.palette-3 { --card-bg: #f5ebdb; --card-ink: #54432b; --card-muted: #90805f; --card-accent: #a97c46; }
+.palette-4 { --card-bg: #eaeae7; --card-ink: #3c3f3e; --card-muted: #767d7a; --card-accent: #647069; }
+.palette-5 { --card-bg: #f2e4de; --card-ink: #4f332c; --card-muted: #8f6c60; --card-accent: #a44a33; }
+
+@media (prefers-color-scheme: dark) {
+  .palette-0 { --card-bg: #232b31; --card-ink: #ccdae2; --card-muted: #8aa2b2; --card-accent: #7fa8c4; }
+  .palette-1 { --card-bg: #262b22; --card-ink: #d4ddc9; --card-muted: #99a68b; --card-accent: #93a884; }
+  .palette-2 { --card-bg: #2c2427; --card-ink: #e0d0d4; --card-muted: #ab8e97; --card-accent: #c08d9b; }
+  .palette-3 { --card-bg: #2e2820; --card-ink: #e7d9c2; --card-muted: #b09c78; --card-accent: #c99b60; }
+  .palette-4 { --card-bg: #26282a; --card-ink: #d8d8d3; --card-muted: #9aa29e; --card-accent: #a3aca7; }
+  .palette-5 { --card-bg: #2d221f; --card-ink: #e5d1c8; --card-muted: #b08d7d; --card-accent: #c47257; }
+}
+
+/* ---- motion ---- */
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-in {
+  animation: card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.45; }
+  50% { opacity: 0.85; }
+  100% { opacity: 0.45; }
+}
+
+.skeleton {
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-in, .fade-up, .skeleton, .spin-slow {
+    animation: none;
+  }
+}
+
+/* thin dashed rule, like a bookbinding stitch */
+.stitch {
+  background-image: linear-gradient(
+    to right,
+    currentColor 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+  height: 1px;
+  opacity: 0.28;
 }

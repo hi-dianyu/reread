@@ -1,0 +1,13 @@
+{
+  "name": "重逢 ReRead",
+  "short_name": "重逢",
+  "description": "每天三张卡片，与你在微信读书划过的句子重逢。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#f6f1e7",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

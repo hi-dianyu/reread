@@ -27,12 +27,8 @@ function formatDate(unixSec?: number): string | null {
   return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
 }
 
-/** 引文按长度分级排版：短句大字，长段落收小 */
-function quoteSizeClass(text: string): string {
-  if (text.length <= 36) return "text-[1.4rem] leading-[2]";
-  if (text.length <= 90) return "text-[1.15rem] leading-[1.95]";
-  return "text-[1rem] leading-[1.9]";
-}
+/** 所有卡片正文统一字号，长短句一致 */
+const QUOTE_TEXT_CLASS = "text-[1.125rem] leading-[2]";
 
 export default function NoteCard({
   card,
@@ -92,7 +88,7 @@ export default function NoteCard({
 
       {/* 正文 */}
       {card.kind === "highlight" ? (
-        <p className={`font-serif ${quoteSizeClass(mainText)} whitespace-pre-wrap`}>
+        <p className={`font-serif ${QUOTE_TEXT_CLASS} whitespace-pre-wrap`}>
           {mainText}
         </p>
       ) : (
@@ -105,7 +101,7 @@ export default function NoteCard({
               {card.quote}
             </blockquote>
           )}
-          <p className={`font-serif ${quoteSizeClass(mainText)} whitespace-pre-wrap`}>
+          <p className={`font-serif ${QUOTE_TEXT_CLASS} whitespace-pre-wrap`}>
             {mainText}
           </p>
           {card.star !== undefined && card.star > 0 && (

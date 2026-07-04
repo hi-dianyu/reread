@@ -52,7 +52,7 @@ export default function SettingsSheet({
             }}
             className="w-full rounded-xl border border-hairline py-3 text-sm transition-opacity active:opacity-60"
           >
-            重新抽取今日卡片
+            清除本地缓存并重新加载
           </button>
           <button
             onClick={() => {

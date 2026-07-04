@@ -5,7 +5,7 @@ import NoteCard from "@/components/NoteCard";
 import Onboarding from "@/components/Onboarding";
 import SettingsSheet from "@/components/SettingsSheet";
 import { drawOne, loadDayState, saveDayState } from "@/lib/daily";
-import type { DayState, NotebookEntry } from "@/lib/types";
+import type { DayState, NotebookEntry, NoteCardData } from "@/lib/types";
 import { fetchAllNotebooks, getApiKey, WeReadError } from "@/lib/weread";
 
 const INITIAL_CARDS = 3;
@@ -20,6 +20,15 @@ function todayLabel(): string {
   }).format(new Date());
 }
 
+function advance(state: DayState, card: NoteCardData): DayState {
+  return {
+    ...state,
+    cards: [...state.cards, card],
+    usedIds: [...state.usedIds, card.id],
+    drawCount: state.drawCount + 1,
+  };
+}
+
 function SkeletonCard({ index }: { index: number }) {
   return (
     <div
@@ -32,11 +41,30 @@ function SkeletonCard({ index }: { index: number }) {
 export default function Home() {
   const [phase, setPhase] = useState<Phase>("booting");
   const [day, setDay] = useState<DayState | null>(null);
-  const [drawing, setDrawing] = useState(false);
+  const [busy, setBusy] = useState<"more" | "shuffle" | null>(null);
   const [deckEmpty, setDeckEmpty] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const notebooksRef = useRef<NotebookEntry[]>([]);
+
+  /** 逐张抽卡直到凑满三张，卡片依次浮现；返回最终状态 */
+  const fillToInitial = useCallback(
+    async (notebooks: NotebookEntry[], start: DayState): Promise<DayState> => {
+      let state = start;
+      while (state.cards.length < INITIAL_CARDS) {
+        const card = await drawOne(notebooks, state);
+        if (!card) {
+          if (state.cards.length === 0) setDeckEmpty(true);
+          break;
+        }
+        state = advance(state, card);
+        saveDayState(state);
+        setDay(state);
+      }
+      return state;
+    },
+    []
+  );
 
   const init = useCallback(async () => {
     if (!getApiKey()) {
@@ -55,32 +83,17 @@ export default function Home() {
         setDeckEmpty(true);
         return;
       }
-      let state = loadDayState();
+      const state = loadDayState();
       setDay(state);
       setPhase("ready");
-      // 今日尚未抽满：逐张抽出，卡片依次浮现
-      while (state.cards.length < INITIAL_CARDS) {
-        const card = await drawOne(notebooks, state);
-        if (!card) {
-          if (state.cards.length === 0) setDeckEmpty(true);
-          break;
-        }
-        state = {
-          ...state,
-          cards: [...state.cards, card],
-          usedIds: [...state.usedIds, card.id],
-          drawCount: state.drawCount + 1,
-        };
-        saveDayState(state);
-        setDay(state);
-      }
+      await fillToInitial(notebooks, state);
     } catch (err) {
       setError(
         err instanceof WeReadError ? err.message : "加载失败，请检查网络后重试"
       );
       setPhase("error");
     }
-  }, []);
+  }, [fillToInitial]);
 
   useEffect(() => {
     // 推迟到下一个 tick，先让骨架屏完成首帧渲染
@@ -89,20 +102,15 @@ export default function Home() {
   }, [init]);
 
   async function drawMore() {
-    if (drawing || !day) return;
-    setDrawing(true);
+    if (busy || !day) return;
+    setBusy("more");
     try {
       const card = await drawOne(notebooksRef.current, day);
       if (!card) {
         setDeckEmpty(true);
         return;
       }
-      const next: DayState = {
-        ...day,
-        cards: [...day.cards, card],
-        usedIds: [...day.usedIds, card.id],
-        drawCount: day.drawCount + 1,
-      };
+      const next = advance(day, card);
       saveDayState(next);
       setDay(next);
     } catch (err) {
@@ -111,7 +119,32 @@ export default function Home() {
       );
       setPhase("error");
     } finally {
-      setDrawing(false);
+      setBusy(null);
+    }
+  }
+
+  /** 换一批：清空当前卡片重抽三张；保留已抽记录所以不会重复，全部看完则重新开一轮 */
+  async function reshuffle() {
+    if (busy || !day) return;
+    setBusy("shuffle");
+    setDeckEmpty(false);
+    try {
+      let state: DayState = { ...day, cards: [] };
+      saveDayState(state);
+      setDay(state);
+      state = await fillToInitial(notebooksRef.current, state);
+      if (state.cards.length === 0 && state.usedIds.length > 0) {
+        setDeckEmpty(false);
+        state = { ...state, usedIds: [] };
+        await fillToInitial(notebooksRef.current, state);
+      }
+    } catch (err) {
+      setError(
+        err instanceof WeReadError ? err.message : "加载失败，请检查网络后重试"
+      );
+      setPhase("error");
+    } finally {
+      setBusy(null);
     }
   }
 
@@ -188,7 +221,8 @@ export default function Home() {
         {cards.map((card, i) => (
           <NoteCard key={card.id} card={card} index={i} />
         ))}
-        {loading &&
+        {(loading || busy === "shuffle") &&
+          cards.length < INITIAL_CARDS &&
           Array.from({ length: INITIAL_CARDS - cards.length }, (_, i) => (
             <SkeletonCard key={`s${i}`} index={i} />
           ))}
@@ -208,33 +242,52 @@ export default function Home() {
         </div>
       )}
 
-      {/* 抽更多 */}
+      {/* 抽更多 / 换一批 */}
       {cards.length > 0 && (
         <footer className="mt-9 flex flex-col items-center gap-3">
-          {deckEmpty ? (
+          {deckEmpty && (
             <p className="font-serif text-sm text-muted">
-              今天的书签都翻完了，明天再来。
+              今天的书签都翻完了，换一批会重新开始。
             </p>
-          ) : (
-            <button
-              onClick={drawMore}
-              disabled={drawing || loading}
-              className="rounded-full border border-hairline bg-surface px-8 py-3 font-serif text-[0.95rem] tracking-[0.25em] shadow-sm transition-opacity active:opacity-60 disabled:opacity-40"
-            >
-              {drawing ? (
-                <span className="inline-flex items-center gap-2">
-                  <svg className="spin-slow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
-                    <path d="M21 12a9 9 0 1 1-6.2-8.56" />
-                  </svg>
-                  正在翻找…
-                </span>
-              ) : (
-                "再拾一张"
-              )}
-            </button>
           )}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={reshuffle}
+              disabled={busy !== null || loading}
+              className="inline-flex items-center gap-2 rounded-full border border-hairline px-6 py-3 font-serif text-[0.95rem] tracking-[0.2em] text-muted transition-opacity active:opacity-60 disabled:opacity-40"
+            >
+              <svg
+                className={busy === "shuffle" ? "spin-slow" : undefined}
+                width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden
+              >
+                <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" />
+                <path d="M3 21v-5h5" />
+              </svg>
+              换一批
+            </button>
+            {!deckEmpty && (
+              <button
+                onClick={drawMore}
+                disabled={busy !== null || loading}
+                className="rounded-full border border-hairline bg-surface px-8 py-3 font-serif text-[0.95rem] tracking-[0.25em] shadow-sm transition-opacity active:opacity-60 disabled:opacity-40"
+              >
+                {busy === "more" ? (
+                  <span className="inline-flex items-center gap-2">
+                    <svg className="spin-slow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+                      <path d="M21 12a9 9 0 1 1-6.2-8.56" />
+                    </svg>
+                    正在翻找…
+                  </span>
+                ) : (
+                  "再拾一张"
+                )}
+              </button>
+            )}
+          </div>
           <p className="text-[11px] tracking-[0.2em] text-muted/70">
-            今日已拾 {cards.length} 张
+            今日已拾 {day?.usedIds.length ?? cards.length} 张
           </p>
         </footer>
       )}

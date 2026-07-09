@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { NoteCardData } from "@/lib/types";
-import { paletteIndex } from "@/lib/daily";
 import { deepLink } from "@/lib/weread";
 
 const KIND_LABEL: Record<NoteCardData["kind"], string> = {
@@ -33,12 +32,14 @@ const QUOTE_TEXT_CLASS = "text-[1.125rem] leading-[2]";
 export default function NoteCard({
   card,
   index,
+  paletteIndex,
 }: {
   card: NoteCardData;
   index: number;
+  paletteIndex: number;
 }) {
   const [copied, setCopied] = useState(false);
-  const palette = `palette-${paletteIndex(card)}`;
+  const palette = `palette-${paletteIndex}`;
   const date = formatDate(card.createTime);
   const mainText = card.kind === "highlight" ? card.quote ?? "" : card.thought ?? "";
 

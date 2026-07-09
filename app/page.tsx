@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import NoteCard from "@/components/NoteCard";
 import Onboarding from "@/components/Onboarding";
 import SettingsSheet from "@/components/SettingsSheet";
-import { drawOne, loadDayState, saveDayState } from "@/lib/daily";
+import { assignPalettes, drawOne, loadDayState, saveDayState } from "@/lib/daily";
 import type { DayState, NotebookEntry, NoteCardData } from "@/lib/types";
 import { fetchAllNotebooks, getApiKey, WeReadError } from "@/lib/weread";
 
@@ -184,6 +184,7 @@ export default function Home() {
   }
 
   const cards = day?.cards ?? [];
+  const palettes = assignPalettes(cards);
   const loading = phase === "booting" || phase === "loading";
 
   return (
@@ -219,7 +220,7 @@ export default function Home() {
       {/* 卡片流 */}
       <section className="mt-7 space-y-5">
         {cards.map((card, i) => (
-          <NoteCard key={card.id} card={card} index={i} />
+          <NoteCard key={card.id} card={card} index={i} paletteIndex={palettes[i]} />
         ))}
         {(loading || busy === "shuffle") &&
           cards.length < INITIAL_CARDS &&

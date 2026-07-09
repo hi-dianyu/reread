@@ -37,9 +37,21 @@ export function todayStr(d = new Date()): string {
   return `${y}-${m}-${day}`;
 }
 
-/** 卡片配色：按笔记 id 稳定散列到 6 套色板 */
-export function paletteIndex(card: NoteCardData): number {
-  return hashStr(card.book.bookId + card.id) % 6;
+const PALETTE_COUNT = 8;
+
+/** 单张卡片的色板：按笔记 id 稳定散列，避免与上一张卡片撞色 */
+function paletteIndex(card: NoteCardData, prevIndex?: number): number {
+  const base = hashStr(card.book.bookId + card.id) % PALETTE_COUNT;
+  return base === prevIndex ? (base + 1) % PALETTE_COUNT : base;
+}
+
+/** 给一叠卡片依次分配色板，保证相邻两张不同色 */
+export function assignPalettes(cards: NoteCardData[]): number[] {
+  const result: number[] = [];
+  for (const card of cards) {
+    result.push(paletteIndex(card, result[result.length - 1]));
+  }
+  return result;
 }
 
 // ---- day state ----

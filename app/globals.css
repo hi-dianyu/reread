@@ -53,6 +53,9 @@ body {
 .palette-3 { --card-bg: #f5ebdb; --card-ink: #54432b; --card-muted: #90805f; --card-accent: #a97c46; }
 .palette-4 { --card-bg: #eaeae7; --card-ink: #3c3f3e; --card-muted: #767d7a; --card-accent: #647069; }
 .palette-5 { --card-bg: #f2e4de; --card-ink: #4f332c; --card-muted: #8f6c60; --card-accent: #a44a33; }
+/* 6/7：呼应微信读书品牌蓝（#30a8ff，约 205° 色相），饱和度提高但仍收在纸墨基调里 */
+.palette-6 { --card-bg: #e3eef4; --card-ink: #1f4051; --card-muted: #57829a; --card-accent: #2f84b0; }
+.palette-7 { --card-bg: #e6e9f2; --card-ink: #333a5c; --card-muted: #6b7195; --card-accent: #4d5e9e; }
 
 @media (prefers-color-scheme: dark) {
   .palette-0 { --card-bg: #232b31; --card-ink: #ccdae2; --card-muted: #8aa2b2; --card-accent: #7fa8c4; }
@@ -61,6 +64,8 @@ body {
   .palette-3 { --card-bg: #2e2820; --card-ink: #e7d9c2; --card-muted: #b09c78; --card-accent: #c99b60; }
   .palette-4 { --card-bg: #26282a; --card-ink: #d8d8d3; --card-muted: #9aa29e; --card-accent: #a3aca7; }
   .palette-5 { --card-bg: #2d221f; --card-ink: #e5d1c8; --card-muted: #b08d7d; --card-accent: #c47257; }
+  .palette-6 { --card-bg: #1c2c34; --card-ink: #c9e0ec; --card-muted: #82abc0; --card-accent: #5fb4e8; }
+  .palette-7 { --card-bg: #23273a; --card-ink: #d6d9ef; --card-muted: #9aa0c9; --card-accent: #8a97d6; }
 }
 
 /* ---- motion ---- */

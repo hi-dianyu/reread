@@ -9,9 +9,10 @@
   --accent: #a44a33;
   --surface: #fdfaf3;
 
-  --font-serif-stack: "LXGW WenKai Screen", "Songti SC", "STSong", serif;
-  --font-sans-stack: system-ui, -apple-system, "PingFang SC",
-    "Microsoft YaHei", sans-serif;
+  --font-serif-stack: "Zhuque Fangsong (technical preview)", "Zhuque Fangsong",
+    "Songti SC", "STSong", serif;
+  --font-sans-stack: "Zhuque Fangsong (technical preview)", "Zhuque Fangsong",
+    "Songti SC", "STSong", serif;
 }
 
 @theme inline {

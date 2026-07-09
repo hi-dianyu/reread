@@ -32,7 +32,7 @@ npm install
 npm run dev
 ```
 
-技术栈：Next.js 16（App Router）+ React 19 + Tailwind CSS v4。中文字体使用自托管的 [霞鹜文楷屏幕阅读版](https://github.com/lxgw/LxgwWenKai-Screen)（按 unicode-range 分片按需加载，不依赖 Google Fonts）。
+技术栈：Next.js 16（App Router）+ React 19 + Tailwind CSS v4。中文字体使用自托管的[朱雀仿宋 (Zhuque Fangsong)](https://github.com/TrionesType/zhuque)（OFL-1.1 协议，按 unicode-range 分片按需加载，不依赖 Google Fonts）。
 
 ```
 app/

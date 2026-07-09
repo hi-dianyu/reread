@@ -141,7 +141,7 @@ export default function NoteCard({
             《{displayTitle(card.book.title)}》
           </p>
           <p className="truncate text-xs" style={{ color: "var(--card-muted)" }}>
-            {[card.book.author, card.chapterTitle].filter(Boolean).join(" · ")}
+            {card.book.author}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">

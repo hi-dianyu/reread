@@ -272,17 +272,19 @@ export default function Home() {
               <button
                 onClick={drawMore}
                 disabled={busy !== null || loading}
-                className="rounded-full border border-hairline bg-surface px-8 py-3 font-serif text-[0.95rem] tracking-[0.25em] shadow-sm transition-opacity active:opacity-60 disabled:opacity-40"
+                aria-busy={busy === "more"}
+                className="relative rounded-full border border-hairline bg-surface px-8 py-3 font-serif text-[0.95rem] tracking-[0.25em] shadow-sm transition-opacity active:opacity-60 disabled:opacity-40"
               >
-                {busy === "more" ? (
-                  <span className="inline-flex items-center gap-2">
-                    <svg className="spin-slow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+                {/* 文字始终占位以固定按钮尺寸；loading 时隐藏文字、居中叠加旋转图标 */}
+                <span className={busy === "more" ? "invisible" : undefined}>
+                  再拾一张
+                </span>
+                {busy === "more" && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <svg className="spin-slow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
                       <path d="M21 12a9 9 0 1 1-6.2-8.56" />
                     </svg>
-                    正在翻找…
                   </span>
-                ) : (
-                  "再拾一张"
                 )}
               </button>
             )}

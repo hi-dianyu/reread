@@ -78,11 +78,11 @@ export default function NoteCard({
         {date && <time>{date}</time>}
       </header>
 
-      {/* 装饰引号 */}
+      {/* 装饰引号：负左边距抵消「的字形左边距，让墨迹与胶囊标签、正文首字左对齐 */}
       <div
         aria-hidden
         className="pointer-events-none select-none font-serif text-[3.2rem] font-black leading-none"
-        style={{ color: "var(--card-accent)", opacity: 0.5, marginTop: "0.4rem", marginBottom: "-0.6rem" }}
+        style={{ color: "var(--card-accent)", opacity: 0.5, marginTop: "0.4rem", marginBottom: "-0.6rem", marginLeft: "-0.59em" }}
       >
         「
       </div>

@@ -43,7 +43,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         }}
       >
         <label htmlFor="apikey" className="text-xs tracking-[0.2em] text-muted">
-          粘贴你的 KEY
+          粘贴你的微信读书 API Key
         </label>
         <input
           id="apikey"

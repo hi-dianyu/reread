@@ -59,7 +59,8 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             value={key}
             onChange={(e) => setKey(e.target.value)}
             onScroll={(e) => setMaskScroll(e.currentTarget.scrollLeft)}
-            className="w-full rounded-xl border border-hairline bg-surface px-4 py-3.5 font-mono text-sm tracking-[0.15em] text-transparent caret-foreground outline-none transition-colors placeholder:text-muted/50 focus:border-accent"
+            /* 字号必须 ≥16px：iOS Safari 聚焦小于 16px 的输入框会自动放大页面 */
+            className="w-full rounded-xl border border-hairline bg-surface px-4 py-3 font-mono text-base tracking-[0.1em] text-transparent caret-foreground outline-none transition-colors placeholder:text-muted/50 focus:border-accent"
           />
           {key && (
             <div
@@ -67,7 +68,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
               className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl"
             >
               <div
-                className="flex h-full items-center whitespace-pre px-4 font-mono text-sm tracking-[0.15em] text-muted"
+                className="flex h-full items-center whitespace-pre px-4 font-mono text-base tracking-[0.1em] text-muted"
                 style={{ transform: `translateX(${-maskScroll}px)` }}
               >
                 {"★".repeat(key.length)}

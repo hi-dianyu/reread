@@ -7,6 +7,8 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
   const [key, setKey] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** 输入框横向滚动位置，用于让星号遮罩跟随长 Key 一起滚动 */
+  const [maskScroll, setMaskScroll] = useState(0);
 
   async function submit(value: string) {
     const trimmed = value.trim();
@@ -44,16 +46,35 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         <label htmlFor="apikey" className="text-xs tracking-[0.2em] text-muted">
           粘贴你的微信读书 API Key
         </label>
-        <input
-          id="apikey"
-          type="password"
-          inputMode="text"
-          autoComplete="off"
-          placeholder="wrk-········"
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-          className="mt-2 w-full rounded-xl border border-hairline bg-surface px-4 py-3.5 font-mono text-sm outline-none transition-colors placeholder:text-muted/50 focus:border-accent"
-        />
+        {/* 原生 password 只能渲染圆点（CSS text-security 无星号选项），
+            所以让真实输入框的字形透明，上面叠一层同字体同字距的 ★，
+            这样粘贴/光标/全选等原生行为不变，视觉上是柔和的星号。 */}
+        <div className="relative mt-2">
+          <input
+            id="apikey"
+            type="password"
+            inputMode="text"
+            autoComplete="off"
+            placeholder="wrk-········"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            onScroll={(e) => setMaskScroll(e.currentTarget.scrollLeft)}
+            className="w-full rounded-xl border border-hairline bg-surface px-4 py-3.5 font-mono text-sm tracking-[0.15em] text-transparent caret-foreground outline-none transition-colors placeholder:text-muted/50 focus:border-accent"
+          />
+          {key && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl"
+            >
+              <div
+                className="flex h-full items-center whitespace-pre px-4 font-mono text-sm tracking-[0.15em] text-muted"
+                style={{ transform: `translateX(${-maskScroll}px)` }}
+              >
+                {"★".repeat(key.length)}
+              </div>
+            </div>
+          )}
+        </div>
         {error && (
           <p role="alert" className="mt-2 text-sm text-accent">
             {error}

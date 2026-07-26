@@ -28,22 +28,22 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <main className="fade-up mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-8 pb-16 pt-[max(env(safe-area-inset-top),2rem)]">
+    <main className="fade-up mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-8 pb-10 pt-[max(env(safe-area-inset-top),2rem)]">
       <p className="text-[11px] tracking-[0.5em] text-muted">RE·READ</p>
       <h1 className="mt-3 font-serif text-5xl font-black tracking-wide">再读</h1>
       <p className="mt-5 font-serif text-[1.05rem] leading-[1.9] text-muted">
-        每天3条你在微信读书划线过的句子。
+        每天三条你在微信读书划线过的句子
       </p>
 
       <form
-        className="mt-12"
+        className="mt-10"
         onSubmit={(e) => {
           e.preventDefault();
           submit(key);
         }}
       >
         <label htmlFor="apikey" className="text-xs tracking-[0.2em] text-muted">
-          微信读书 API KEY
+          粘贴你的 KEY
         </label>
         <input
           id="apikey"
@@ -69,6 +69,22 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         </button>
       </form>
 
+      {/* 取 Key 的步骤 */}
+      <ol className="mt-6 space-y-3 rounded-xl border border-hairline bg-surface px-5 py-4">
+        {[
+          "打开微信读书 App，进入「设置」",
+          "打开「微信读书 Skill」",
+          "选择「复制 Key」",
+        ].map((step, i) => (
+          <li key={i} className="flex items-baseline gap-3 text-sm leading-relaxed">
+            <span className="shrink-0 font-serif text-xs font-semibold text-accent">
+              {i + 1}
+            </span>
+            <span>{step}</span>
+          </li>
+        ))}
+      </ol>
+
       <button
         onClick={() => submit(DEMO_KEY)}
         disabled={busy}
@@ -77,11 +93,9 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         没有 Key？先用示例笔记试试
       </button>
 
-      <div className="mt-10 space-y-2 text-xs leading-relaxed text-muted">
-        <p>· Key 只保存在你手机的浏览器里，服务器不存储。</p>
-        <p>· 在微信读书 App 中获取你的 AI 助手 API Key（wrk- 开头）。</p>
-        <p>· 本应用只读取笔记，不会修改你的任何数据。</p>
-      </div>
+      <p className="mt-8 text-xs leading-relaxed text-muted">
+        Key 只保存在你的手机里，服务器不存储；只读取笔记，不会修改你的任何数据。
+      </p>
     </main>
   );
 }

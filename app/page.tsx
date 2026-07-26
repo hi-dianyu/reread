@@ -210,13 +210,6 @@ export default function Home() {
           </svg>
         </button>
       </header>
-      <p
-        className="fade-up mt-2 px-1 font-serif text-sm text-muted"
-        style={{ animationDelay: "80ms" }}
-      >
-        与你划线的句子再见一面。
-      </p>
-
       {/* 卡片流 */}
       <section className="mt-7 space-y-5">
         {cards.map((card, i) => (

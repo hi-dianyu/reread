@@ -3,12 +3,19 @@
 import { useState } from "react";
 import { setApiKey, validateKey, WeReadError } from "@/lib/weread";
 
+/** 遮罩用的小圆点：比周围字符更小更疏，视觉上更轻 */
+function Dots({ count }: { count: number }) {
+  return (
+    <span className="mx-[0.25em] text-[0.7em] tracking-[0.35em]">
+      {"•".repeat(count)}
+    </span>
+  );
+}
+
 export default function Onboarding({ onDone }: { onDone: () => void }) {
   const [key, setKey] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  /** 输入框横向滚动位置，用于让星号遮罩跟随长 Key 一起滚动 */
-  const [maskScroll, setMaskScroll] = useState(0);
 
   async function submit(value: string) {
     const trimmed = value.trim();
@@ -46,35 +53,44 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         <label htmlFor="apikey" className="text-xs tracking-[0.2em] text-muted">
           粘贴你的微信读书 API Key
         </label>
-        {/* 原生 password 只能渲染圆点（CSS text-security 无星号选项），
-            所以让真实输入框的字形透明，上面叠一层同字体同字距的 ★，
-            这样粘贴/光标/全选等原生行为不变，视觉上是柔和的星号。 */}
+        {/* 输入框本身的字形、光标、placeholder 全部透明，可见内容由下面那层
+            遮罩渲染：这样字号可以自由控制（输入框必须保持 ≥16px，否则 iOS
+            聚焦时会放大页面），Key 再长也不会溢出。
+            展示方式参照微信读书自己的做法：保留首尾，中间用小圆点。 */}
         <div className="relative mt-2">
           <input
             id="apikey"
             type="password"
             inputMode="text"
             autoComplete="off"
-            placeholder="wrk-········"
+            placeholder="wrk-"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            onScroll={(e) => setMaskScroll(e.currentTarget.scrollLeft)}
-            /* 字号必须 ≥16px：iOS Safari 聚焦小于 16px 的输入框会自动放大页面 */
-            className="w-full rounded-xl border border-hairline bg-surface px-4 py-3 font-mono text-base tracking-[0.1em] text-transparent caret-foreground outline-none transition-colors placeholder:text-muted/50 focus:border-accent"
+            className="w-full rounded-xl border border-hairline bg-surface px-4 py-3 font-mono text-base text-transparent caret-transparent outline-none transition-colors placeholder:text-transparent focus:border-accent"
           />
-          {key && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl"
-            >
-              <div
-                className="flex h-full items-center whitespace-pre px-4 font-mono text-base tracking-[0.1em] text-muted"
-                style={{ transform: `translateX(${-maskScroll}px)` }}
-              >
-                {"★".repeat(key.length)}
-              </div>
-            </div>
-          )}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 flex items-center px-4 font-mono text-sm"
+          >
+            {key ? (
+              <span className="text-muted">
+                {key.length <= 12 ? (
+                  <Dots count={key.length} />
+                ) : (
+                  <>
+                    {key.slice(0, 8)}
+                    <Dots count={12} />
+                    {key.slice(-4)}
+                  </>
+                )}
+              </span>
+            ) : (
+              <span className="text-muted/50">
+                wrk-
+                <Dots count={8} />
+              </span>
+            )}
+          </div>
         </div>
         {error && (
           <p role="alert" className="mt-2 text-sm text-accent">

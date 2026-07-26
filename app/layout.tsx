@@ -8,7 +8,7 @@ const ZHUQUE_FANGSONG_CSS = "/fonts/zhuque/zhuque-fangsong.css";
 
 export const metadata: Metadata = {
   title: "再读 ReRead",
-  description: "每天从你的微信读书划线里，随机挑三条给你看。",
+  description: "每天3条你在微信读书划线过的句子。",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

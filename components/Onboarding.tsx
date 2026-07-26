@@ -32,7 +32,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
       <p className="text-[11px] tracking-[0.5em] text-muted">RE·READ</p>
       <h1 className="mt-3 font-serif text-5xl font-black tracking-wide">再读</h1>
       <p className="mt-5 font-serif text-[1.05rem] leading-[1.9] text-muted">
-        每天从你的微信读书划线里，随机挑三条给你看。
+        每天3条你在微信读书划线过的句子。
       </p>
 
       <form

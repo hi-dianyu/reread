@@ -1,7 +1,7 @@
 {
   "name": "再读 ReRead",
   "short_name": "再读",
-  "description": "每天从你的微信读书划线里，随机挑三条给你看。",
+  "description": "每天3条你在微信读书划线过的句子。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f6f1e7",

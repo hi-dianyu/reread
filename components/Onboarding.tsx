@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DEMO_KEY } from "@/lib/demo";
 import { setApiKey, validateKey, WeReadError } from "@/lib/weread";
 
 export default function Onboarding({ onDone }: { onDone: () => void }) {
@@ -84,18 +83,6 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
           </li>
         ))}
       </ol>
-
-      <button
-        onClick={() => submit(DEMO_KEY)}
-        disabled={busy}
-        className="mt-4 py-2 text-sm text-muted underline decoration-hairline underline-offset-4 active:opacity-60"
-      >
-        没有 Key？先用示例笔记试试
-      </button>
-
-      <p className="mt-8 text-xs leading-relaxed text-muted">
-        Key 只保存在你的手机里，服务器不存储；只读取笔记，不会修改你的任何数据。
-      </p>
     </main>
   );
 }

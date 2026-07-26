@@ -7,12 +7,12 @@ import "./globals.css";
 const ZHUQUE_FANGSONG_CSS = "/fonts/zhuque/zhuque-fangsong.css";
 
 export const metadata: Metadata = {
-  title: "重逢 ReRead",
+  title: "再读 ReRead",
   description: "每天从你的微信读书划线里，随机挑三条给你看。",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "重逢",
+    title: "再读",
     statusBarStyle: "black-translucent",
   },
 };

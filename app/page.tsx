@@ -196,7 +196,7 @@ export default function Home() {
             {todayLabel()}
           </p>
           <h1 className="mt-1.5 font-serif text-[2rem] font-black leading-none tracking-wide">
-            重逢
+            再读
           </h1>
         </div>
         <button
@@ -238,7 +238,7 @@ export default function Home() {
           <p className="mt-4">
             还没有找到你的笔记。
             <br />
-            去微信读书里划几条线，明天来重逢。
+            去微信读书里划几条线，明天再来读。
           </p>
         </div>
       )}
